@@ -1,0 +1,23 @@
+{
+  "name": "marionette-focuslist",
+  "version": "0.0.0",
+  "licence": "ISC",
+  "authors": [
+    "Jurie-Jan Botha <juriejanbotha@gmail.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juriejan/marionette-focuslist.git"
+  },
+  "main": [
+    "dist/js/marionette-focuslist.js"
+  ],
+  "description": "",
+  "ignore": [
+    ".editorconfig",
+    ".gitignore"
+  ],
+  "resolutions": {},
+  "dependencies": {},
+  "devDependencies": {}
+}
