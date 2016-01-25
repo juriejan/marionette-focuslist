@@ -18,7 +18,8 @@
   },
   "scripts": {
     "build": "node scripts/build.js",
-    "lint": "node scripts/lint.js"
+    "lint": "node scripts/lint.js",
+    "test": "node scripts/test.js"
   },
   "dependencies": {},
   "devDependencies": {
@@ -27,9 +28,12 @@
     "bluebird": "^3.1.2",
     "eslint": "^1.10.3",
     "fs-extra": "^0.26.4",
+    "jsdom": "^7.2.2",
     "lodash": "^4.0.0",
+    "mocha": "^2.3.4",
     "rollup": "^0.25.1",
     "rollup-plugin-babel": "^2.3.9",
-    "standard": "^5.4.1"
+    "standard": "^5.4.1",
+    "wiredep": "^3.0.0"
   }
 }

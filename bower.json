@@ -19,7 +19,15 @@
   ],
   "build-target": "dist/js/marionette-focuslist.js",
   "module-name": "focuslist",
-  "resolutions": {},
+  "globals": {},
+  "test-globals": {
+    "mocha": "mocha",
+    "chai": "chai",
+    "focuslist": "focuslist"
+  },
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "mocha": "~2.3.4",
+    "chai": "~3.4.2"
+  }
 }
