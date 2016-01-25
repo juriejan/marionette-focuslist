@@ -39,7 +39,7 @@ function compileTemplates (basePath, dest) {
     .then(() => utils.log(`Compiled templates in '${basePath}' to '${dest}'`))
 }
 
-function packageApplication (entry, dest, moduleName, globals) {
+function packageApplication (entry, dest, globals, moduleName) {
   return Promise.resolve()
     .then(() => rollup.rollup({
       entry, external: _.keys(globals), plugins: [rollupBabel()]
@@ -48,14 +48,14 @@ function packageApplication (entry, dest, moduleName, globals) {
       dest, globals, moduleName, format: 'umd'
     }))
     .then((result) => {
-      var mapFileName = `${dest}.map`
+      var mapFileName = `${path.basename(dest)}.map`
       var code = result.code + `\n//# sourceMappingURL=${mapFileName}`
       return Promise.all([
         fs.writeFileAsync(dest, code),
-        fs.writeFileAsync(mapFileName, result.map)
+        fs.writeFileAsync(`${dest}.map`, result.map)
       ])
     })
-    .then(() => utils.log(`Bundled package at '${entry}' to '${dest}'`))
+    .then(() => utils.log(`Packaged application at '${entry}'`))
 }
 
 function build () {
@@ -64,7 +64,7 @@ function build () {
     .then(() => utils.mkdirs('dist'))
     .then(() => utils.mkdirs('dist/js'))
     .then(() => compileTemplates('templates', 'src/templates.js'))
-    .then(() => packageApplication('src/index.js', TARGET, NAME, GLOBALS))
+    .then(() => packageApplication('src/index.js', TARGET, GLOBALS, NAME))
 }
 
 module.exports = build

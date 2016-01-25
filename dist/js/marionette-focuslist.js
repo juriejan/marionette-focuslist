@@ -138,4 +138,4 @@
     return index;
 
 }));
-//# sourceMappingURL=dist/js/marionette-focuslist.js.map
+//# sourceMappingURL=marionette-focuslist.js.map
