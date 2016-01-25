@@ -42,15 +42,10 @@ function compileTemplates (basePath, dest) {
 function packageApplication (entry, dest, moduleName, globals) {
   return Promise.resolve()
     .then(() => rollup.rollup({
-      entry,
-      external: _.keys(globals),
-      plugins: [rollupBabel()]
+      entry, external: _.keys(globals), plugins: [rollupBabel()]
     }))
     .then((bundle) => bundle.generate({
-      dest,
-      globals,
-      moduleName,
-      format: 'umd'
+      dest, globals, moduleName, format: 'umd'
     }))
     .then((result) => {
       var mapFileName = `${dest}.map`
@@ -60,7 +55,7 @@ function packageApplication (entry, dest, moduleName, globals) {
         fs.writeFileAsync(mapFileName, result.map)
       ])
     })
-    .then(() => utils.log(`Packaged application at '${entry}' to '${dest}'`))
+    .then(() => utils.log(`Bundled package at '${entry}' to '${dest}'`))
 }
 
 function build () {
