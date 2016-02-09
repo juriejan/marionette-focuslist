@@ -15,7 +15,11 @@
   "description": "",
   "ignore": [
     ".editorconfig",
-    ".gitignore"
+    ".gitignore",
+    "src",
+    "scripts",
+    "templates",
+    "test"
   ],
   "build-target": "dist/js/marionette-focuslist.js",
   "module-name": "focuslist",
