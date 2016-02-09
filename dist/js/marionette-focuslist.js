@@ -111,7 +111,7 @@
       },
       getListHeight: function getListHeight() {
         var el = this.ui.list;
-        var height = el.height();
+        var height = el.outerHeight() + this.$el.outerHeight();
         el.css('height', '');
         // Calculate the height according to the maximum size
         if (this.maxSize) {
