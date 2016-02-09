@@ -102,7 +102,7 @@ export default Marionette.CompositeView.extend({
   },
   getListHeight: function () {
     var el = this.ui.list
-    var height = el.height()
+    var height = el.outerHeight()
     el.css('height', '')
     // Calculate the height according to the maximum size
     if (this.maxSize) {
