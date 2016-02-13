@@ -111,14 +111,21 @@
       },
       getListHeight: function getListHeight() {
         var el = this.ui.list;
-        var height = el.outerHeight() + this.$el.outerHeight();
-        el.css('height', '');
-        // Calculate the height according to the maximum size
+        var height;
         if (this.maxSize) {
+          // Calculate the height according to the maximum size
           var firstItem = el.find('li').eq(0);
           var itemHeight = firstItem.outerHeight();
           height = _.min([el.height(), itemHeight * this.maxSize]);
+        } else {
+          height = el.outerHeight();
         }
+        // Determine the and add the outer border widths
+        var topBorderWidth = this.$el.css('border-top-width');
+        var bottomBorderWidth = this.$el.css('border-bottom-width');
+        topBorderWidth = parseInt(topBorderWidth, 10);
+        bottomBorderWidth = parseInt(bottomBorderWidth, 10);
+        height += topBorderWidth + bottomBorderWidth;
         // Return the calculated height
         return height;
       },
