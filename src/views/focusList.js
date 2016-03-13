@@ -36,6 +36,12 @@ export default Marionette.CompositeView.extend({
   onShow: function () {
     this.refreshScroll()
   },
+  onAttach: function () {
+    this.resetHeight()
+  },
+  onRender: function () {
+    this.resetHeight()
+  },
   onChildFocus: function (child) {
     if (child.$el.is(':not(.disabled)')) {
       this.ui.list.children().removeClass('focus')
@@ -99,6 +105,9 @@ export default Marionette.CompositeView.extend({
   },
   refreshScroll: function () {
     this.ui.scroll.nanoScroller({alwaysVisible: true})
+  },
+  resetHeight: function () {
+    this.$el.height(this.getListHeight())
   },
   getListHeight: function () {
     var el = this.ui.list

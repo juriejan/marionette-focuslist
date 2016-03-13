@@ -45,6 +45,12 @@
       onShow: function onShow() {
         this.refreshScroll();
       },
+      onAttach: function onAttach() {
+        this.resetHeight();
+      },
+      onRender: function onRender() {
+        this.resetHeight();
+      },
       onChildFocus: function onChildFocus(child) {
         if (child.$el.is(':not(.disabled)')) {
           this.ui.list.children().removeClass('focus');
@@ -108,6 +114,9 @@
       },
       refreshScroll: function refreshScroll() {
         this.ui.scroll.nanoScroller({ alwaysVisible: true });
+      },
+      resetHeight: function resetHeight() {
+        this.$el.height(this.getListHeight());
       },
       getListHeight: function getListHeight() {
         var el = this.ui.list;
