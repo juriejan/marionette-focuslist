@@ -120,12 +120,18 @@ export default Marionette.CompositeView.extend({
     } else {
       height = el.outerHeight()
     }
-    // Determine the and add the outer border widths
+    // Determine and add the outer border widths
     var topBorderWidth = this.$el.css('border-top-width')
     var bottomBorderWidth = this.$el.css('border-bottom-width')
     topBorderWidth = parseInt(topBorderWidth, 10)
     bottomBorderWidth = parseInt(bottomBorderWidth, 10)
     height += (topBorderWidth + bottomBorderWidth)
+    // Determine and add the list padding
+    var paddingTop = this.$el.css('padding-top')
+    var paddingBottom = this.$el.css('padding-bottom')
+    paddingTop = parseInt(paddingTop, 10)
+    paddingBottom = parseInt(paddingBottom, 10)
+    height += paddingTop + paddingBottom
     // Return the calculated height
     return height
   },
