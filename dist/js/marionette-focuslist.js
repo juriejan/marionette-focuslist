@@ -116,7 +116,7 @@
         this.ui.scroll.nanoScroller({ alwaysVisible: true });
       },
       resetHeight: function resetHeight() {
-        this.$el.height(this.getListHeight());
+        this.$el.css('height', this.getListHeight() + 'px');
       },
       getListHeight: function getListHeight() {
         var el = this.ui.list;

@@ -107,7 +107,7 @@ export default Marionette.CompositeView.extend({
     this.ui.scroll.nanoScroller({alwaysVisible: true})
   },
   resetHeight: function () {
-    this.$el.height(this.getListHeight())
+    this.$el.css('height', `${this.getListHeight()}px`)
   },
   getListHeight: function () {
     var el = this.ui.list
