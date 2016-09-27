@@ -2,11 +2,28 @@
 import _ from 'lodash'
 
 import animation from 'animation'
-import Marionette from 'marionette'
+import marionette from 'marionette'
 
 import templates from '../templates'
 
-export default Marionette.CompositeView.extend({
+const ListView = marionette.CollectionView.extend({
+  tagName: 'ul',
+  childEvents: {
+    focus: 'onChildFocus',
+    select: 'onChildSelect'
+  },
+  onChildFocus: function (child) {
+    if (child.$el.is(':not(.disabled)')) {
+      this.$el.children().removeClass('focus')
+      child.$el.addClass('focus')
+    }
+  },
+  onChildSelect: function (child) {
+    this.trigger('select', child)
+  }
+})
+
+export default marionette.LayoutView.extend({
   template: templates['focusList'],
   attributes: {
     class: 'focusList'
@@ -14,15 +31,12 @@ export default Marionette.CompositeView.extend({
   events: {
     'keydown': 'onKeyDown'
   },
-  childViewContainer: 'ul',
-  childEvents: {
-    focus: 'onChildFocus',
-    select: 'onChildSelect'
+  regions: {
+    list: '[region=list]'
   },
   ui: {
     scroll: '.nano',
-    content: '.nano-content',
-    list: 'ul'
+    content: '.nano-content'
   },
   keyEvents: {
     13: 'itemSelect',
@@ -32,6 +46,8 @@ export default Marionette.CompositeView.extend({
   },
   initialize: function (options) {
     this.maxSize = options.maxSize
+    this.childView = options.childView
+    this.collection = options.collection
   },
   onShow: function () {
     this.refreshScroll()
@@ -40,16 +56,15 @@ export default Marionette.CompositeView.extend({
     this.resetHeight()
   },
   onRender: function () {
+    this.listView = new ListView({
+      childView: this.childView,
+      collection: this.collection
+    })
+    this.listenTo(this.listView, 'select', (child) => {
+      this.trigger('select', child)
+    })
+    this.showChildView('list', this.listView)
     this.resetHeight()
-  },
-  onChildFocus: function (child) {
-    if (child.$el.is(':not(.disabled)')) {
-      this.ui.list.children().removeClass('focus')
-      child.$el.addClass('focus')
-    }
-  },
-  onChildSelect: function (child) {
-    this.trigger('select', child)
   },
   onKeyDown: function (e) {
     var method = this.keyEvents[e.keyCode]
@@ -59,12 +74,12 @@ export default Marionette.CompositeView.extend({
     }
   },
   onArrowUpKey: function () {
-    var focusedView = this.findFocusedItem()
+    let focusedView = this.findFocusedItem()
     if (focusedView === undefined) {
-      this.ui.list.children().last().addClass('focus')
+      this.listView.$el.children().last().addClass('focus')
     } else {
-      var items = this.ui.list.children(':not(.disabled)')
-      var index = items.index(focusedView.el)
+      let items = this.listView.$el.children(':not(.disabled)')
+      let index = items.index(focusedView.el)
       index = index - 1
       index = (index < 0) ? (items.length - 1) : index
       this.focusItem(items, index)
@@ -73,9 +88,9 @@ export default Marionette.CompositeView.extend({
   onArrowDownKey: function () {
     var focusedView = this.findFocusedItem()
     if (focusedView === undefined) {
-      this.ui.list.children().first().addClass('focus')
+      this.listView.$el.children().first().addClass('focus')
     } else {
-      var items = this.ui.list.children(':not(.disabled)')
+      var items = this.listView.$el.children(':not(.disabled)')
       var index = items.index(focusedView.el)
       index = index + 1
       index = (index > (items.length - 1)) ? 0 : index
@@ -93,15 +108,18 @@ export default Marionette.CompositeView.extend({
   },
   itemSelect: function (e) {
     var focusedView = this.findFocusedItem()
-    this.ui.list.children().removeClass('focus')
+    this.listView.$el.children().removeClass('focus')
     if (focusedView !== undefined) {
       this.trigger('select', focusedView)
     }
   },
   findFocusedItem: function () {
-    return this.children.find(function (child) {
+    return this.listView.children.find(function (child) {
       return child.$el.hasClass('focus')
     })
+  },
+  findByModel: function (model) {
+    return this.listView.children.findByModel(model)
   },
   refreshScroll: function () {
     this.ui.scroll.nanoScroller({alwaysVisible: true})
@@ -110,7 +128,7 @@ export default Marionette.CompositeView.extend({
     this.$el.css('height', `${this.getListHeight()}px`)
   },
   getListHeight: function () {
-    var el = this.ui.list
+    var el = this.listView.$el
     var height
     if (this.maxSize) {
       // Calculate the height according to the maximum size

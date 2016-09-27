@@ -2,20 +2,37 @@
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('lodash'), require('animation'), require('marionette'), require('handlebars')) :
     typeof define === 'function' && define.amd ? define(['lodash', 'animation', 'marionette', 'handlebars'], factory) :
     (global.focuslist = factory(global._,global.animation,global.Marionette,global.Handlebars));
-}(this, function (_,animation,Marionette,handlebars) { 'use strict';
+}(this, function (_,animation,marionette,handlebars) { 'use strict';
 
     _ = 'default' in _ ? _['default'] : _;
     animation = 'default' in animation ? animation['default'] : animation;
-    Marionette = 'default' in Marionette ? Marionette['default'] : Marionette;
+    marionette = 'default' in marionette ? marionette['default'] : marionette;
     handlebars = 'default' in handlebars ? handlebars['default'] : handlebars;
 
     var templates = {
         'focusList': handlebars.template({ "compiler": [7, ">= 4.0.0"], "main": function main(container, depth0, helpers, partials, data) {
-                return "<div class=\"nano\">\n  <div class=\"nano-content\">\n    <ul></ul>\n  </div>\n</div>\n";
+                return "<div class=\"nano\">\n  <div class=\"nano-content\" region=\"list\">\n    <ul></ul>\n  </div>\n</div>\n";
             }, "useData": true })
     };
 
-    var FocusListView = Marionette.CompositeView.extend({
+    var ListView = marionette.CollectionView.extend({
+      tagName: 'ul',
+      childEvents: {
+        focus: 'onChildFocus',
+        select: 'onChildSelect'
+      },
+      onChildFocus: function onChildFocus(child) {
+        if (child.$el.is(':not(.disabled)')) {
+          this.$el.children().removeClass('focus');
+          child.$el.addClass('focus');
+        }
+      },
+      onChildSelect: function onChildSelect(child) {
+        this.trigger('select', child);
+      }
+    });
+
+    var FocusListView = marionette.LayoutView.extend({
       template: templates['focusList'],
       attributes: {
         class: 'focusList'
@@ -23,15 +40,12 @@
       events: {
         'keydown': 'onKeyDown'
       },
-      childViewContainer: 'ul',
-      childEvents: {
-        focus: 'onChildFocus',
-        select: 'onChildSelect'
+      regions: {
+        list: '[region=list]'
       },
       ui: {
         scroll: '.nano',
-        content: '.nano-content',
-        list: 'ul'
+        content: '.nano-content'
       },
       keyEvents: {
         13: 'itemSelect',
@@ -41,6 +55,8 @@
       },
       initialize: function initialize(options) {
         this.maxSize = options.maxSize;
+        this.childView = options.childView;
+        this.collection = options.collection;
       },
       onShow: function onShow() {
         this.refreshScroll();
@@ -49,16 +65,17 @@
         this.resetHeight();
       },
       onRender: function onRender() {
+        var _this = this;
+
+        this.listView = new ListView({
+          childView: this.childView,
+          collection: this.collection
+        });
+        this.listenTo(this.listView, 'select', function (child) {
+          _this.trigger('select', child);
+        });
+        this.showChildView('list', this.listView);
         this.resetHeight();
-      },
-      onChildFocus: function onChildFocus(child) {
-        if (child.$el.is(':not(.disabled)')) {
-          this.ui.list.children().removeClass('focus');
-          child.$el.addClass('focus');
-        }
-      },
-      onChildSelect: function onChildSelect(child) {
-        this.trigger('select', child);
       },
       onKeyDown: function onKeyDown(e) {
         var method = this.keyEvents[e.keyCode];
@@ -70,9 +87,9 @@
       onArrowUpKey: function onArrowUpKey() {
         var focusedView = this.findFocusedItem();
         if (focusedView === undefined) {
-          this.ui.list.children().last().addClass('focus');
+          this.listView.$el.children().last().addClass('focus');
         } else {
-          var items = this.ui.list.children(':not(.disabled)');
+          var items = this.listView.$el.children(':not(.disabled)');
           var index = items.index(focusedView.el);
           index = index - 1;
           index = index < 0 ? items.length - 1 : index;
@@ -82,9 +99,9 @@
       onArrowDownKey: function onArrowDownKey() {
         var focusedView = this.findFocusedItem();
         if (focusedView === undefined) {
-          this.ui.list.children().first().addClass('focus');
+          this.listView.$el.children().first().addClass('focus');
         } else {
-          var items = this.ui.list.children(':not(.disabled)');
+          var items = this.listView.$el.children(':not(.disabled)');
           var index = items.index(focusedView.el);
           index = index + 1;
           index = index > items.length - 1 ? 0 : index;
@@ -102,15 +119,18 @@
       },
       itemSelect: function itemSelect(e) {
         var focusedView = this.findFocusedItem();
-        this.ui.list.children().removeClass('focus');
+        this.listView.$el.children().removeClass('focus');
         if (focusedView !== undefined) {
           this.trigger('select', focusedView);
         }
       },
       findFocusedItem: function findFocusedItem() {
-        return this.children.find(function (child) {
+        return this.listView.children.find(function (child) {
           return child.$el.hasClass('focus');
         });
+      },
+      findByModel: function findByModel(model) {
+        return this.listView.children.findByModel(model);
       },
       refreshScroll: function refreshScroll() {
         this.ui.scroll.nanoScroller({ alwaysVisible: true });
@@ -119,7 +139,7 @@
         this.$el.css('height', this.getListHeight() + 'px');
       },
       getListHeight: function getListHeight() {
-        var el = this.ui.list;
+        var el = this.listView.$el;
         var height;
         if (this.maxSize) {
           // Calculate the height according to the maximum size
