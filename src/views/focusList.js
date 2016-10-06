@@ -64,7 +64,6 @@ export default marionette.LayoutView.extend({
       this.trigger('select', child)
     })
     this.showChildView('list', this.listView)
-    this.resetHeight()
   },
   onKeyDown: function (e) {
     var method = this.keyEvents[e.keyCode]
