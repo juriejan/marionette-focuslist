@@ -39,8 +39,8 @@ export default marionette.LayoutView.extend({
     content: '.nano-content'
   },
   keyEvents: {
-    13: 'itemSelect',
-    32: 'itemSelect',
+    13: 'onEnterKey',
+    32: 'onSpaceKey',
     38: 'onArrowUpKey',
     40: 'onArrowDownKey'
   },
@@ -95,6 +95,12 @@ export default marionette.LayoutView.extend({
       index = (index > (items.length - 1)) ? 0 : index
       this.focusItem(items, index)
     }
+  },
+  onEnterKey: function () {
+    this.itemSelect()
+  },
+  onSpaceKey: function () {
+    this.itemSelect()
   },
   focusItem: function (items, index) {
     var item = items.eq(index)

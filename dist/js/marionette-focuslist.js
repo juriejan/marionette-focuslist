@@ -48,8 +48,8 @@
         content: '.nano-content'
       },
       keyEvents: {
-        13: 'itemSelect',
-        32: 'itemSelect',
+        13: 'onEnterKey',
+        32: 'onSpaceKey',
         38: 'onArrowUpKey',
         40: 'onArrowDownKey'
       },
@@ -106,6 +106,12 @@
           index = index > items.length - 1 ? 0 : index;
           this.focusItem(items, index);
         }
+      },
+      onEnterKey: function onEnterKey() {
+        this.itemSelect();
+      },
+      onSpaceKey: function onSpaceKey() {
+        this.itemSelect();
       },
       focusItem: function focusItem(items, index) {
         var item = items.eq(index);
