@@ -5,6 +5,7 @@ import animation from 'animation'
 import marionette from 'marionette'
 
 import templates from '../templates'
+import utils from '../utils'
 
 const ListView = marionette.CollectionView.extend({
   tagName: 'ul',
@@ -60,6 +61,7 @@ export default marionette.LayoutView.extend({
       childView: this.childView,
       collection: this.collection
     })
+    utils.transfer(this.listView, this, 'render:collection')
     this.listenTo(this.listView, 'select', (child) => {
       this.trigger('select', child)
     })

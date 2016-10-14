@@ -15,6 +15,17 @@
             }, "useData": true })
     };
 
+    function transfer(sender, receiver, eventName) {
+      sender.listenTo(sender, eventName, function () {
+        var args = _([eventName]).concat(arguments).value();
+        receiver.trigger.apply(receiver, args);
+      });
+    }
+
+    var utils = {
+      transfer: transfer
+    };
+
     var ListView = marionette.CollectionView.extend({
       tagName: 'ul',
       childEvents: {
@@ -71,6 +82,7 @@
           childView: this.childView,
           collection: this.collection
         });
+        utils.transfer(this.listView, this, 'render:collection');
         this.listenTo(this.listView, 'select', function (child) {
           _this.trigger('select', child);
         });
