@@ -32,6 +32,9 @@
         focus: 'onChildFocus',
         select: 'onChildSelect'
       },
+      filter: function filter(child) {
+        return !(child.get('visible') === false);
+      },
       onChildFocus: function onChildFocus(child) {
         if (child.$el.is(':not(.disabled)')) {
           this.$el.children().removeClass('focus');
@@ -78,14 +81,19 @@
       onRender: function onRender() {
         var _this = this;
 
+        // Create child views
         this.listView = new ListView({
           childView: this.childView,
           collection: this.collection
         });
-        utils.transfer(this.listView, this, 'render:collection');
-        this.listenTo(this.listView, 'select', function (child) {
-          _this.trigger('select', child);
+        // Render the list view when the collection changes
+        this.listenTo(this.collection, 'change', function () {
+          return _this.listView.render();
         });
+        // Transfer list view events to parent
+        utils.transfer(this.listView, this, 'render:collection');
+        utils.transfer(this.listView, this, 'select');
+        // Show child views
         this.showChildView('list', this.listView);
       },
       onKeyDown: function onKeyDown(e) {
@@ -130,9 +138,6 @@
         items.removeClass('focus');
         item.addClass('focus');
         animation.scroll(item, this.ui.content);
-      },
-      filter: function filter(child) {
-        return !(child.get('visible') === false);
       },
       itemSelect: function itemSelect(e) {
         var focusedView = this.findFocusedItem();

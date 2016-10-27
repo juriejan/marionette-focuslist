@@ -13,6 +13,9 @@ const ListView = marionette.CollectionView.extend({
     focus: 'onChildFocus',
     select: 'onChildSelect'
   },
+  filter: function (child) {
+    return !(child.get('visible') === false)
+  },
   onChildFocus: function (child) {
     if (child.$el.is(':not(.disabled)')) {
       this.$el.children().removeClass('focus')
@@ -57,14 +60,17 @@ export default marionette.LayoutView.extend({
     this.resetHeight()
   },
   onRender: function () {
+    // Create child views
     this.listView = new ListView({
       childView: this.childView,
       collection: this.collection
     })
+    // Render the list view when the collection changes
+    this.listenTo(this.collection, 'change', () => this.listView.render())
+    // Transfer list view events to parent
     utils.transfer(this.listView, this, 'render:collection')
-    this.listenTo(this.listView, 'select', (child) => {
-      this.trigger('select', child)
-    })
+    utils.transfer(this.listView, this, 'select')
+    // Show child views
     this.showChildView('list', this.listView)
   },
   onKeyDown: function (e) {
@@ -109,9 +115,6 @@ export default marionette.LayoutView.extend({
     items.removeClass('focus')
     item.addClass('focus')
     animation.scroll(item, this.ui.content)
-  },
-  filter: function (child) {
-    return !(child.get('visible') === false)
   },
   itemSelect: function (e) {
     var focusedView = this.findFocusedItem()
