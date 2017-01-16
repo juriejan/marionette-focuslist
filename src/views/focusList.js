@@ -136,6 +136,7 @@ export default marionette.LayoutView.extend({
   },
   resetHeight: function () {
     this.$el.css('height', `${this.getListHeight()}px`)
+    this.refreshScroll()
   },
   getListHeight: function () {
     var el = this.listView.$el

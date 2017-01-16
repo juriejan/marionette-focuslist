@@ -159,6 +159,7 @@
       },
       resetHeight: function resetHeight() {
         this.$el.css('height', this.getListHeight() + 'px');
+        this.refreshScroll();
       },
       getListHeight: function getListHeight() {
         var el = this.listView.$el;
