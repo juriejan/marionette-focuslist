@@ -155,7 +155,9 @@
         return this.listView.children.findByModel(model);
       },
       refreshScroll: function refreshScroll() {
-        this.ui.scroll.nanoScroller({ alwaysVisible: true });
+        if (this.options.scroll) {
+          this.ui.scroll.nanoScroller({ alwaysVisible: true });
+        }
       },
       resetHeight: function resetHeight() {
         this.$el.css('height', this.getListHeight() + 'px');

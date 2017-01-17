@@ -132,7 +132,9 @@ export default marionette.LayoutView.extend({
     return this.listView.children.findByModel(model)
   },
   refreshScroll: function () {
-    this.ui.scroll.nanoScroller({alwaysVisible: true})
+    if (this.options.scroll) {
+      this.ui.scroll.nanoScroller({alwaysVisible: true})
+    }
   },
   resetHeight: function () {
     this.$el.css('height', `${this.getListHeight()}px`)
