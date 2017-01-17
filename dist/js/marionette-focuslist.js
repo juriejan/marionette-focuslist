@@ -160,7 +160,8 @@
         }
       },
       resetHeight: function resetHeight() {
-        this.$el.css('height', this.getListHeight() + 'px');
+        this.height = this.getListHeight();
+        this.$el.css('height', this.height + 'px');
         this.refreshScroll();
       },
       getListHeight: function getListHeight() {
