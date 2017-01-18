@@ -1,6 +1,4 @@
 
-import _ from 'lodash'
-
 import animation from 'animation'
 import marionette from 'marionette'
 
@@ -55,9 +53,6 @@ export default marionette.LayoutView.extend({
   },
   onShow: function () {
     this.refreshScroll()
-  },
-  onAttach: function () {
-    this.resetHeight()
   },
   onRender: function () {
     // Create child views
@@ -138,37 +133,6 @@ export default marionette.LayoutView.extend({
     if (this.options.scroll) {
       this.ui.scroll.nanoScroller({alwaysVisible: true})
     }
-  },
-  resetHeight: function () {
-    this.height = this.getListHeight()
-    this.$el.css('height', `${this.height}px`)
-    this.refreshScroll()
-  },
-  getListHeight: function () {
-    var el = this.listView.$el
-    var height
-    if (this.maxSize) {
-      // Calculate the height according to the maximum size
-      var firstItem = el.find('li').eq(0)
-      var itemHeight = firstItem.outerHeight()
-      height = _.min([el.height(), (itemHeight * this.maxSize)])
-      // Determine and add the outer border widths
-      var topBorderWidth = el.css('border-top-width')
-      var bottomBorderWidth = el.css('border-bottom-width')
-      topBorderWidth = parseInt(topBorderWidth, 10)
-      bottomBorderWidth = parseInt(bottomBorderWidth, 10)
-      height += (topBorderWidth + bottomBorderWidth)
-      // Determine and add the list padding
-      var paddingTop = el.css('padding-top')
-      var paddingBottom = el.css('padding-bottom')
-      paddingTop = parseInt(paddingTop, 10)
-      paddingBottom = parseInt(paddingBottom, 10)
-      height += paddingTop + paddingBottom
-    } else {
-      height = el.outerHeight()
-    }
-    // Return the calculated height
-    return height
   },
   getListWidth: function () {
     var width = null

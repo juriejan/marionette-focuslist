@@ -1,13 +1,13 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('lodash'), require('animation'), require('marionette'), require('handlebars')) :
-    typeof define === 'function' && define.amd ? define(['lodash', 'animation', 'marionette', 'handlebars'], factory) :
-    (global.focuslist = factory(global._,global.animation,global.Marionette,global.Handlebars));
-}(this, function (_,animation,marionette,handlebars) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('animation'), require('marionette'), require('handlebars'), require('lodash')) :
+    typeof define === 'function' && define.amd ? define(['animation', 'marionette', 'handlebars', 'lodash'], factory) :
+    (global.focuslist = factory(global.animation,global.Marionette,global.Handlebars,global._));
+}(this, function (animation,marionette,handlebars,_) { 'use strict';
 
-    _ = 'default' in _ ? _['default'] : _;
     animation = 'default' in animation ? animation['default'] : animation;
     marionette = 'default' in marionette ? marionette['default'] : marionette;
     handlebars = 'default' in handlebars ? handlebars['default'] : handlebars;
+    _ = 'default' in _ ? _['default'] : _;
 
     var templates = {
         'focusList': handlebars.template({ "1": function _(container, depth0, helpers, partials, data) {
@@ -80,9 +80,6 @@
       },
       onShow: function onShow() {
         this.refreshScroll();
-      },
-      onAttach: function onAttach() {
-        this.resetHeight();
       },
       onRender: function onRender() {
         var _this = this;
@@ -167,37 +164,6 @@
         if (this.options.scroll) {
           this.ui.scroll.nanoScroller({ alwaysVisible: true });
         }
-      },
-      resetHeight: function resetHeight() {
-        this.height = this.getListHeight();
-        this.$el.css('height', this.height + 'px');
-        this.refreshScroll();
-      },
-      getListHeight: function getListHeight() {
-        var el = this.listView.$el;
-        var height;
-        if (this.maxSize) {
-          // Calculate the height according to the maximum size
-          var firstItem = el.find('li').eq(0);
-          var itemHeight = firstItem.outerHeight();
-          height = _.min([el.height(), itemHeight * this.maxSize]);
-          // Determine and add the outer border widths
-          var topBorderWidth = el.css('border-top-width');
-          var bottomBorderWidth = el.css('border-bottom-width');
-          topBorderWidth = parseInt(topBorderWidth, 10);
-          bottomBorderWidth = parseInt(bottomBorderWidth, 10);
-          height += topBorderWidth + bottomBorderWidth;
-          // Determine and add the list padding
-          var paddingTop = el.css('padding-top');
-          var paddingBottom = el.css('padding-bottom');
-          paddingTop = parseInt(paddingTop, 10);
-          paddingBottom = parseInt(paddingBottom, 10);
-          height += paddingTop + paddingBottom;
-        } else {
-          height = el.outerHeight();
-        }
-        // Return the calculated height
-        return height;
       },
       getListWidth: function getListWidth() {
         var width = null;
