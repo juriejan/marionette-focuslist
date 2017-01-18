@@ -110,6 +110,9 @@ export default marionette.LayoutView.extend({
   onSpaceKey: function () {
     this.itemSelect()
   },
+  serializeData: function () {
+    return {scroll: this.options.scroll}
+  },
   focusItem: function (items, index) {
     var item = items.eq(index)
     items.removeClass('focus')

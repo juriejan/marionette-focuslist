@@ -10,8 +10,14 @@
     handlebars = 'default' in handlebars ? handlebars['default'] : handlebars;
 
     var templates = {
-        'focusList': handlebars.template({ "compiler": [7, ">= 4.0.0"], "main": function main(container, depth0, helpers, partials, data) {
-                return "<div class=\"nano\">\n  <div class=\"nano-content\" region=\"list\">\n    <ul></ul>\n  </div>\n</div>\n";
+        'focusList': handlebars.template({ "1": function _(container, depth0, helpers, partials, data) {
+                return "  <div class=\"nano\">\n    <div class=\"nano-content\" region=\"list\"></div>\n  </div>\n";
+            }, "3": function _(container, depth0, helpers, partials, data) {
+                return "  <div region=\"list\"></div>\n";
+            }, "compiler": [7, ">= 4.0.0"], "main": function main(container, depth0, helpers, partials, data) {
+                var stack1;
+
+                return (stack1 = helpers["if"].call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.scroll : depth0, { "name": "if", "hash": {}, "fn": container.program(1, data, 0), "inverse": container.program(3, data, 0), "data": data })) != null ? stack1 : "";
             }, "useData": true })
     };
 
@@ -132,6 +138,9 @@
       },
       onSpaceKey: function onSpaceKey() {
         this.itemSelect();
+      },
+      serializeData: function serializeData() {
+        return { scroll: this.options.scroll };
       },
       focusItem: function focusItem(items, index) {
         var item = items.eq(index);
