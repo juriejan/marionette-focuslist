@@ -40,7 +40,8 @@
     "backbone.marionette": "marionette#~2.4.4",
     "backbone": "~1.2.3",
     "handlebars": "~4.0.5",
-    "lodash": "~4.0.0"
+    "lodash": "~4.0.0",
+    "nanoscroller": "juriejan/nanoScrollerJS#navigator-master"
   },
   "devDependencies": {
     "mocha": "~2.3.4",
