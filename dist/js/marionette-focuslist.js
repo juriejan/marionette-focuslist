@@ -74,7 +74,6 @@
         40: 'onArrowDownKey'
       },
       initialize: function initialize(options) {
-        this.maxSize = options.maxSize;
         this.childView = options.childView;
         this.collection = options.collection;
       },

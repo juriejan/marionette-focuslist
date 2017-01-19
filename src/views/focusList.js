@@ -47,7 +47,6 @@ export default marionette.LayoutView.extend({
     40: 'onArrowDownKey'
   },
   initialize: function (options) {
-    this.maxSize = options.maxSize
     this.childView = options.childView
     this.collection = options.collection
   },
